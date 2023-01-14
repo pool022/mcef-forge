@@ -345,7 +345,7 @@ public class ClientProxy extends BaseProxy {
 
     // edit
     @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent event) {
+    public void onTickStart(TickEvent.ClientTickEvent event) {
         mc.getProfiler().push("MCEF");
 
         if (cefApp != null)

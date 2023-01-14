@@ -176,6 +176,9 @@ public class ClientProxy extends BaseProxy {
             exampleMod.onInit();
 
         Log.info("MCEF loaded successfuly.");
+
+        MinecraftForge.EVENT_BUS.addListener(this::onTickStart);
+        MinecraftForge.EVENT_BUS.addListener(this::onLogin);
     }
 
     public void onInitializeClient(FMLClientSetupEvent event) {
@@ -341,7 +344,6 @@ public class ClientProxy extends BaseProxy {
         return appHandler.isSchemeRegistered(name);
     }
 
-    @SubscribeEvent
     public void onTickStart(TickEvent.ClientTickEvent event) {
         mc.getProfiler().push("MCEF");
 
@@ -355,7 +357,6 @@ public class ClientProxy extends BaseProxy {
         mc.getProfiler().pop();
     }
 
-    @SubscribeEvent
     public void onLogin(PlayerEvent.PlayerLoggedInEvent ev) {
         if (updateStr == null || !MCEF.WARN_UPDATES)
             return;

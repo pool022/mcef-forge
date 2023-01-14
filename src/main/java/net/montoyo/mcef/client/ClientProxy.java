@@ -171,7 +171,7 @@ public class ClientProxy extends BaseProxy {
 
         // If shutdown patcher fail runs shutdown patcher
         // removed!
-
+        MinecraftForge.EVENT_BUS.register(this);
         if (MCEF.ENABLE_EXAMPLE)
             exampleMod.onInit();
 
@@ -275,7 +275,7 @@ public class ClientProxy extends BaseProxy {
 
             // If shutdown patcher fail runs shutdown patcher
             // removed!
-
+            
             if (MCEF.ENABLE_EXAMPLE)
                 exampleMod.onInit();
 

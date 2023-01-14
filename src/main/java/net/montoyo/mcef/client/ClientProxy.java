@@ -79,6 +79,7 @@ public class ClientProxy extends BaseProxy {
 
     public void onInitializeClient(FMLClientSetupEvent event) {
         Minecraft.getInstance().tell(() -> {
+            Log.info("Call from main init event.");
             RenderSystem.assertOnRenderThread();
 
             appHandler.setArgs(MCEF.CEF_ARGS);

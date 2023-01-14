@@ -70,115 +70,12 @@ public class ClientProxy extends BaseProxy {
     @Override
     public void onInit() {
         //super.onInit();
-        Log.info("MCEF threads called after?");
-        //IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        //eventBus.addListener(this::onInitializeClient);
-        //MinecraftForge.EVENT_BUS.addListener(this::onTickStart);
-        //MinecraftForge.EVENT_BUS.addListener(this::onLogin);
-
-        //RenderSystem.assertOnRenderThread();
-
-        appHandler.setArgs(MCEF.CEF_ARGS);
-
-        ROOT = mc.gameDirectory.getAbsolutePath().replaceAll("\\\\", "/");
-        if (ROOT.endsWith("."))
-            ROOT = ROOT.substring(0, ROOT.length() - 1);
-
-        if (ROOT.endsWith("/"))
-            ROOT = ROOT.substring(0, ROOT.length() - 1);
-
-        JCEF_ROOT = ROOT + "/jcef";
-
-        File fileListing = new File(new File(ROOT), "config");
-
-        IProgressListener ipl;
-        RemoteConfig cfg = new RemoteConfig();
-        // Forge splash used to run here
-        System.out.println("SYSTEM HEADLESS PROPERTY: " + System.getProperty("java.awt.headless"));
-        System.setProperty("java.awt.headless","false"); // local is bugged for me
-        ipl = new UpdateFrame();
-
-        cfg.load();
-
-        System.out.println("Updating MCEF file listing ");
-
-        if (!cfg.updateFileListing(fileListing, false))
-            Log.warning("There was a problem while establishing file list. Uninstall may not delete all files.");
-
-        System.out.println("Updating MCEF missing files... ");
-
-        if (!cfg.downloadMissing(ipl)) {
-            Log.warning("Going in virtual mode; couldn't download resources.");
-            VIRTUAL = true;
-            return;
-        }
-
-        if (!cfg.updateFileListing(fileListing, true))
-            Log.warning("There was a problem while updating file list. Uninstall may not delete all files.");
-
-        updateStr = cfg.getUpdateString();
-        ipl.onProgressEnd();
-
-        if (OS.isLinux()) {
-            File subproc = new File(JCEF_ROOT, "jcef_helper");
-
-            // Attempt to make the CEF subprocess executable if not
-            if (!subproc.canExecute()) {
-                try {
-                    int retCode = Runtime.getRuntime().exec(new String[]{"/usr/bin/chmod", "+x", subproc.getAbsolutePath()}).waitFor();
-
-                    if (retCode != 0)
-                        throw new RuntimeException("chmod exited with code " + retCode);
-                } catch (Throwable t) {
-                    Log.errorEx("Error while giving execution rights to jcef_helper. MCEF will enter virtual mode. You can fix this by chmoding jcef_helper manually.", t);
-                    VIRTUAL = true;
-                }
-            }
-        }
-
-        if (VIRTUAL)
-            return;
-
-        CefSettings settings = new CefSettings();
-        settings.windowless_rendering_enabled = true;
-        settings.background_color = settings.new ColorType(0, 255, 255, 255);
-        settings.cache_path = (new File(JCEF_ROOT, "cache")).getAbsolutePath();
-        // settings.user_agent = "MCEF"
-
-        CefApp.startup(MCEF.CEF_ARGS);
-        cefApp = CefApp.getInstance(settings);
-
-        // Custom scheme broken on Linux, for now
-        if (!OS.isLinux()) {
-            CefApp.addAppHandler(appHandler);
-        }
-
-        loadMimeTypeMapping();
-
-        cefClient = cefApp.createClient();
-
-        Log.info(cefApp.getVersion().toString());
-        cefRouter = CefMessageRouter.create(new CefMessageRouterConfig("mcefQuery", "mcefCancel"));
-        cefClient.addMessageRouter(cefRouter);
-        cefClient.addDisplayHandler(displayHandler);
-        cefClient.addLifeSpanHandler(new CefLifeSpanHandlerAdapter() {
-            @Override
-            public boolean doClose(CefBrowser browser) {
-                browser.close(true);
-                return false;
-            }
-        });
-
-        // If shutdown patcher fail runs shutdown patcher
-        // removed!
-        MinecraftForge.EVENT_BUS.register(this);
-        if (MCEF.ENABLE_EXAMPLE)
-            exampleMod.onInit();
-
-        Log.info("MCEF loaded successfuly.");
-
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        eventBus.addListener(this::onInitializeClient);
         MinecraftForge.EVENT_BUS.addListener(this::onTickStart);
         MinecraftForge.EVENT_BUS.addListener(this::onLogin);
+
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public void onInitializeClient(FMLClientSetupEvent event) {
@@ -278,7 +175,7 @@ public class ClientProxy extends BaseProxy {
 
             // If shutdown patcher fail runs shutdown patcher
             // removed!
-            MinecraftForge.EVENT_BUS.register(this);
+
             if (MCEF.ENABLE_EXAMPLE)
                 exampleMod.onInit();
 

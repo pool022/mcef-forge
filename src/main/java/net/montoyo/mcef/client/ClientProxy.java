@@ -74,6 +74,7 @@ public class ClientProxy extends BaseProxy {
         // eventBus.addListener(this::onInitializeClient);
         // MinecraftForge.EVENT_BUS.addListener(this::onTickStart);
         // MinecraftForge.EVENT_BUS.addListener(this::onLogin);
+        // init
         Log.info("Call from main init event.");
         //RenderSystem.assertOnRenderThread();
 

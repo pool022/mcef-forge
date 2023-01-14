@@ -70,6 +70,7 @@ public class ClientProxy extends BaseProxy {
     @Override
     public void onInit() {
         super.onInit();
+        Log.info("MCEF threads called after?");
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::onInitializeClient);
         MinecraftForge.EVENT_BUS.addListener(this::onTickStart);

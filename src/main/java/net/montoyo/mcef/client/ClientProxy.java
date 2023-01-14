@@ -76,7 +76,7 @@ public class ClientProxy extends BaseProxy {
         MinecraftForge.EVENT_BUS.addListener(this::onTickStart);
         MinecraftForge.EVENT_BUS.addListener(this::onLogin);
 
-        RenderSystem.assertOnRenderThread();
+        //RenderSystem.assertOnRenderThread();
 
         appHandler.setArgs(MCEF.CEF_ARGS);
 

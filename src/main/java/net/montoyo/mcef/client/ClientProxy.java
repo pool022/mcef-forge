@@ -73,8 +73,8 @@ public class ClientProxy extends BaseProxy {
         Log.info("MCEF threads called after?");
         //IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         //eventBus.addListener(this::onInitializeClient);
-        MinecraftForge.EVENT_BUS.addListener(this::onTickStart);
-        MinecraftForge.EVENT_BUS.addListener(this::onLogin);
+        //MinecraftForge.EVENT_BUS.addListener(this::onTickStart);
+        //MinecraftForge.EVENT_BUS.addListener(this::onLogin);
 
         //RenderSystem.assertOnRenderThread();
 
@@ -275,7 +275,7 @@ public class ClientProxy extends BaseProxy {
 
             // If shutdown patcher fail runs shutdown patcher
             // removed!
-            
+            MinecraftForge.EVENT_BUS.register(this);
             if (MCEF.ENABLE_EXAMPLE)
                 exampleMod.onInit();
 
@@ -341,6 +341,7 @@ public class ClientProxy extends BaseProxy {
         return appHandler.isSchemeRegistered(name);
     }
 
+    @SubscribeEvent
     public void onTickStart(TickEvent.ClientTickEvent event) {
         mc.getProfiler().push("MCEF");
 
@@ -354,6 +355,7 @@ public class ClientProxy extends BaseProxy {
         mc.getProfiler().pop();
     }
 
+    @SubscribeEvent
     public void onLogin(PlayerEvent.PlayerLoggedInEvent ev) {
         if (updateStr == null || !MCEF.WARN_UPDATES)
             return;

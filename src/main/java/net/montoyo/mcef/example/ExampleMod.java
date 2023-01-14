@@ -84,7 +84,7 @@ public class ExampleMod implements IDisplayHandler, IJSQueryHandler {
     }
 
 
-    public void onTickStart(TickEvent.ClientTickEvent event) {
+    public void onTick(TickEvent.ClientTickEvent event) {
         // Check if our key was pressed
         if(key.isDown() && !(mc.screen instanceof BrowserScreen)) {
             //Display the web browser UI.

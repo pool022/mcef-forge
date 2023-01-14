@@ -345,17 +345,19 @@ public class ClientProxy extends BaseProxy {
 
     // edit
     @SubscribeEvent
-    public void onTickStart(TickEvent.ClientTickEvent event) {
-        mc.getProfiler().push("MCEF");
+    public void onTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            mc.getProfiler().push("MCEF");
 
-        if (cefApp != null)
-            cefApp.N_DoMessageLoopWork();
+            if (cefApp != null)
+                cefApp.N_DoMessageLoopWork();
 
-        for (CefBrowserOsr b : browsers)
-            b.mcefUpdate();
+            for (CefBrowserOsr b : browsers)
+                b.mcefUpdate();
 
-        displayHandler.update();
-        mc.getProfiler().pop();
+            displayHandler.update();
+            mc.getProfiler().pop();
+        }
     }
 
     // edit

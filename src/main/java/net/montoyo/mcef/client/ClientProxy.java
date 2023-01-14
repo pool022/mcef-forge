@@ -69,7 +69,7 @@ public class ClientProxy extends BaseProxy {
 
     @Override
     public void onInit() {
-        super.onInit();
+        //super.onInit();
         Log.info("MCEF threads called after?");
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::onInitializeClient);
